@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bohring Band</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --card: #1a1a28;
+      --accent: #e8ff00;
+      --accent2: #ff4d6d;
+      --text: #f0f0f0;
+      --muted: #888;
+      --border: #2a2a3a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Mono', monospace;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    #presentacio {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      padding: 2rem;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(232,255,0,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 80%, rgba(255,77,109,0.1) 0%, transparent 60%),
+        var(--bg);
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .band-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 15vw, 13rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      animation: fadeUp 1s ease both;
+    }
+
+    .band-name span {
+      color: var(--accent);
+      display: block;
+    }
+
+    .tagline {
+      margin-top: 1.5rem;
+      font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+      color: var(--muted);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      animation: fadeUp 1s 0.3s ease both;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 6rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1;
+      margin-bottom: 2rem;
+    }
+
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin-bottom: 3rem;
+    }
+
+    /* ── QUI SOM ── */
+    .qui-som-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .group-photo {
+      aspect-ratio: 4/3;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .group-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .photo-icon {
+      font-size: 2.5rem;
+      opacity: 0.3;
+    }
+
+    .description-text {
+      line-height: 1.9;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+
+    .description-text p + p { margin-top: 1rem; }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--bg);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── INTEGRANTS ── */
+    #integrants {
+      background: var(--surface);
+      max-width: 100%;
+      padding: 6rem 2rem;
+    }
+
+    #integrants > .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .member-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .member-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .member-photo {
+      aspect-ratio: 3/4;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .member-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .member-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      opacity: 0.15;
+    }
+
+    .member-info {
+      padding: 1rem;
+    }
+
+    .member-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    .member-role {
+      font-size: 0.7rem;
+      color: var(--accent2);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    /* ── CONTACTE ── */
+    #contacte {
+      text-align: center;
+      padding: 6rem 2rem;
+      background:
+        radial-gradient(ellipse 50% 60% at 50% 100%, rgba(232,255,0,0.08) 0%, transparent 70%),
+        var(--bg);
+      max-width: 100%;
+    }
+
+    #contacte > .inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .contact-item:hover {
+      border-color: var(--accent);
+      background: rgba(232,255,0,0.05);
+    }
+
+    .contact-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    .contact-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(8px); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .qui-som-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+    }
+
+    /* Instruction text for photos */
+    .drive-hint {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#presentacio">BB</a>
+  <ul class="nav-links">
+    <li><a href="#presentacio">Inici</a></li>
+    <li><a href="#qui-som">Qui som</a></li>
+    <li><a href="#integrants">Integrants</a></li>
+    <li><a href="#contacte">Contacte</a></li>
+  </ul>
+</nav>
+
+<!-- HERO / PRESENTACIÓ -->
+<section id="presentacio">
+  <!--
+    LOGO: substitueix LOGO_FILE_ID per l'ID de la imatge del logo a Google Drive
+    (Drive → clic dret → Obtenir l'enllaç → copia l'ID entre /d/ i /view)
+  -->
+  <img
+    src="https://drive.google.com/thumbnail?id=LOGO_FILE_ID&sz=w300"
+    alt="Logo Bohring Band"
+    style="max-width: 180px; margin-bottom: 2rem; animation: fadeUp 0.8s ease both;"
+    onerror="this.style.display='none';"
+  />
+  <div class="band-name">
+    Bohring<span>Band</span>
+  </div>
+  <p class="tagline">Covers Pop · Rock · Física · Passió</p>
+  <span class="scroll-hint">↓ Descobreix-nos ↓</span>
+</section>
+
+<!-- QUI SOM -->
+<section id="qui-som">
+  <p class="section-label">// 01</p>
+  <h2>Qui som?</h2>
+  <div class="divider"></div>
+  <div class="qui-som-grid">
+
+    <!-- FOTO DE GRUP -->
+    <div class="group-photo">
+      <!--
+        PER AFEGIR LA FOTO DE GRUP DES DE DRIVE:
+        1. Obre Google Drive → clic dret a la foto → "Obtenir l'enllaç" → "Qualsevol persona amb l'enllaç"
+        2. Copia l'ID de la URL (la part entre /d/ i /view)
+        3. Substitueix YOUR_FILE_ID_HERE per l'ID copiat
+        4. Esborra el div.photo-placeholder
+      -->
+      <img
+        src="https://drive.google.com/thumbnail?id=YOUR_FILE_ID_HERE&sz=w800"
+        alt="Foto de grup Bohring Band"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      />
+      <div class="photo-placeholder">
+        <div class="photo-icon">📸</div>
+        <span>Foto de grup</span>
+        <span class="drive-hint">Substitueix YOUR_FILE_ID_HERE<br>per l'ID de la foto de Drive</span>
+      </div>
+    </div>
+
+    <!-- DESCRIPCIÓ -->
+    <div>
+      <span class="badge">Pop · Rock · UB</span>
+      <div class="description-text">
+        <p>
+          La <strong>Bohring Band</strong> neix de la passió compartida per la música i la física.
+          Som un grup de <em>covers pop-rock</em> format per estudiants del Grau de Física i del
+          Doble Grau de Física i Matemàtiques (FisMat) de la Universitat de Barcelona.
+        </p>
+        <p>
+          Perquè sí, les equacions de Maxwell i els riffs de guitarra no estan tan allunyats com
+          sembla. Igual que a la física estudiem ones, freqüències i ressonàncies, a la música les
+          vivim en primera persona. La Bohring Band és el lloc on la teoria es converteix en so.
+        </p>
+        <p>
+          El nom és un homenatge al físic danès Niels Bohr, amb un joc de paraules en anglès —
+          <em>bohring</em>, "avorrit" — perquè nosaltres demostrem cada dia que la física no ho
+          és gens. Concerts, assajos i molta energia: benvinguts al nostre univers.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- INTEGRANTS -->
+<div id="integrants">
+  <div class="inner">
+    <p class="section-label">// 02</p>
+    <h2>Integrants</h2>
+    <div class="divider"></div>
+
+    <div class="members-grid">
+
+      <!-- DANI -->
+      <div class="member-card">
+        <div class="member-photo">
+          <!--
+            INSTRUCCIONS PER AFEGIR FOTO:
+            1. Drive → clic dret → "Obtenir l'enllaç" → qualsevol persona
+            2. Copia l'ID i substitueix DANI_FILE_ID
+            3. Esborra el div.member-photo-placeholder
+          -->
+          <img
+            src="https://drive.google.com/thumbnail?id=DANI_FILE_ID&sz=w400"
+            alt="Dani"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="member-photo-placeholder">🎸</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Dani</div>
+          <div class="member-role">Veu &amp; Guitarra Rítmica</div>
+        </div>
+      </div>
+
+      <!-- MARTÍ -->
+      <div class="member-card">
+        <div class="member-photo">
+          <img
+            src="https://drive.google.com/thumbnail?id=MARTI_FILE_ID&sz=w400"
+            alt="Martí"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="member-photo-placeholder">🎸</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Martí</div>
+          <div class="member-role">Guitarra Elèctrica</div>
+        </div>
+      </div>
+
+      <!-- ADRIÀ -->
+      <div class="member-card">
+        <div class="member-photo">
+          <img
+            src="https://drive.google.com/thumbnail?id=ADRIA_FILE_ID&sz=w400"
+            alt="Adrià"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="member-photo-placeholder">🎸</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Adrià</div>
+          <div class="member-role">Baix</div>
+        </div>
+      </div>
+
+      <!-- MIQUEL ÀNGEL -->
+      <div class="member-card">
+        <div class="member-photo">
+          <img
+            src="https://drive.google.com/thumbnail?id=MIQUELANGEL_FILE_ID&sz=w400"
+            alt="Miquel Àngel"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="member-photo-placeholder">🎹</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Miquel Àngel</div>
+          <div class="member-role">Piano</div>
+        </div>
+      </div>
+
+      <!-- LAURA -->
+      <div class="member-card">
+        <div class="member-photo">
+          <img
+            src="https://drive.google.com/thumbnail?id=LAURA_FILE_ID&sz=w400"
+            alt="Laura"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <div class="member-photo-placeholder">🥁</div>
+        </div>
+        <div class="member-info">
+          <div class="member-name">Laura</div>
+          <div class="member-role">Bateria</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONTACTE -->
+<div id="contacte">
+  <div class="inner">
+    <p class="section-label">// 03</p>
+    <h2>Contacte</h2>
+    <div class="divider"></div>
+    <p style="color:var(--muted); font-size:0.85rem; line-height:1.8;">
+      Vols contractar-nos, col·laborar o simplement dir-nos hola?<br>
+      Ens trobaràs aquí:
+    </p>
+    <div class="contact-cards">
+
+      <a class="contact-item" href="https://www.instagram.com/bohringband" target="_blank" rel="noopener">
+        <span class="contact-icon">📸</span>
+        <div>
+          <span class="contact-label">Instagram</span>
+          <span class="contact-value">@bohringband</span>
+        </div>
+      </a>
+
+      <a class="contact-item" href="mailto:bohringband@gmail.com">
+        <span class="contact-icon">✉️</span>
+        <div>
+          <span class="contact-label">Correu electrònic</span>
+          <span class="contact-value">bohringband@gmail.com</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2025 Bohring Band · Universitat de Barcelona · Física &amp; FisMat
+</footer>
+
+</body>
+</html>
