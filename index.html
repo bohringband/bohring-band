@@ -675,13 +675,6 @@
     <h2>Galeria</h2>
     <div class="divider"></div>
 
-    <!--
-      INSTRUCCIONS:
-      Puja les fotos/vídeos a la carpeta imatges/ del teu repositori GitHub.
-      Afegeix o elimina blocs <div class="carousel-slide"> segons els fitxers que tinguis.
-      Per vídeos usa <video>, per fotos usa <img>.
-      Exemples de noms: galeria1.jpg, galeria2.jpg, concert1.mp4 ...
-    -->
     <div class="carousel-wrapper">
       <div class="carousel-track" id="carouselTrack">
 
@@ -705,17 +698,15 @@
           <img src="imatges/galeria4.jpg" alt="Galeria 4" onerror="this.parentElement.style.background='var(--card)'; this.style.display='none';" />
         </div>
 
-        <!-- FOTO 5 -->
+        <!-- VÍDEO 5 -->
         <div class="carousel-slide">
-          <img src="imatges/galeria5.jpg" alt="Galeria 5" onerror="this.parentElement.style.background='var(--card)'; this.style.display='none';" />
+          <video src="imatges/galeria5.mp4" controls playsinline></video>
         </div>
 
-        <!-- VÍDEO 1 (descomenta si tens vídeo) -->
-        <!--
+        <!-- VÍDEO 6 -->
         <div class="carousel-slide">
-          <video src="imatges/concert1.mp4" controls muted playsinline></video>
+          <video src="imatges/galeria6.mp4" controls playsinline></video>
         </div>
-        -->
 
       </div>
     </div>
@@ -725,9 +716,38 @@
       <div class="carousel-dots" id="carouselDots"></div>
       <button class="carousel-btn" id="nextBtn">&#8594;</button>
     </div>
-
   </div>
 </div>
+
+<style>
+  .carousel-track {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 1rem;
+  }
+
+  .carousel-slide {
+    min-width: calc((100% - 2rem) / 3);
+    aspect-ratio: 4/3;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .carousel-slide img,
+  .carousel-slide video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 700px) {
+    .carousel-slide { min-width: 100%; }
+  }
+</style>
 
 <script>
   (function() {
@@ -737,15 +757,12 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    function getSlidesVisible() {
-      return window.innerWidth <= 700 ? 1 : 3;
-    }
-
+    const VISIBLE = () => window.innerWidth <= 700 ? 1 : 3;
+    const GAP = 16;
     let current = 0;
-    const total = slides.length;
 
     function totalSteps() {
-      return Math.ceil(total / getSlidesVisible());
+      return Math.ceil(slides.length / VISIBLE());
     }
 
     function buildDots() {
@@ -766,8 +783,8 @@
 
     function goTo(index) {
       current = (index + totalSteps()) % totalSteps();
-      const slideWidth = slides[0].offsetWidth + 16; // gap = 1rem = 16px
-      track.style.transform = `translateX(-${current * getSlidesVisible() * slideWidth}px)`;
+      const slideWidth = slides[0].offsetWidth + GAP;
+      track.style.transform = `translateX(-${current * VISIBLE() * slideWidth}px)`;
       updateDots();
     }
 
