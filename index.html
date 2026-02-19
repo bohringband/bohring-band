@@ -375,6 +375,103 @@
       .nav-links { display: none; }
     }
 
+    /* ── GALERIA ── */
+    #galeria {
+      max-width: 100%;
+      padding: 6rem 2rem;
+      background: var(--bg);
+    }
+
+    #galeria > .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .carousel-wrapper {
+      position: relative;
+      margin-top: 3rem;
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      gap: 1rem;
+    }
+
+    .carousel-slide {
+      min-width: calc(33.333% - 0.67rem);
+      aspect-ratio: 16/10;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .carousel-slide img,
+    .carousel-slide video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-slide video {
+      cursor: pointer;
+    }
+
+    .carousel-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .carousel-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: border-color 0.2s, background 0.2s;
+      border-radius: 2px;
+    }
+
+    .carousel-btn:hover {
+      border-color: var(--accent);
+      background: rgba(232,255,0,0.08);
+    }
+
+    .carousel-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .carousel-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .carousel-dot.active {
+      background: var(--accent);
+      transform: scale(1.3);
+    }
+
+    @media (max-width: 700px) {
+      .carousel-slide { min-width: calc(100% - 0rem); }
+    }
+
     /* Instruction text for photos */
     .drive-hint {
       font-size: 0.65rem;
@@ -395,6 +492,7 @@
     <li><a href="#presentacio">Inici</a></li>
     <li><a href="#qui-som">Qui som</a></li>
     <li><a href="#integrants">Integrants</a></li>
+    <li><a href="#galeria">Galeria</a></li>
     <li><a href="#contacte">Contacte</a></li>
   </ul>
 </nav>
@@ -406,7 +504,7 @@
     (Drive → clic dret → Obtenir l'enllaç → copia l'ID entre /d/ i /view)
   -->
   <img
-    src="imatges/Logo.jpg"
+    src="https://drive.google.com/thumbnail?id=LOGO_FILE_ID&sz=w300"
     alt="Logo Bohring Band"
     style="max-width: 180px; margin-bottom: 2rem; animation: fadeUp 0.8s ease both;"
     onerror="this.style.display='none';"
@@ -435,7 +533,7 @@
         4. Esborra el div.photo-placeholder
       -->
       <img
-        src="imatges/grup.jpg"
+        src="https://drive.google.com/thumbnail?id=YOUR_FILE_ID_HERE&sz=w800"
         alt="Foto de grup Bohring Band"
         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
       />
@@ -490,7 +588,7 @@
             3. Esborra el div.member-photo-placeholder
           -->
           <img
-            src="imatges/DANI2.jpeg"
+            src="https://drive.google.com/thumbnail?id=DANI_FILE_ID&sz=w400"
             alt="Dani"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
@@ -506,7 +604,7 @@
       <div class="member-card">
         <div class="member-photo">
           <img
-            src="imatges/MARTÍ.jpeg"
+            src="https://drive.google.com/thumbnail?id=MARTI_FILE_ID&sz=w400"
             alt="Martí"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
@@ -522,7 +620,7 @@
       <div class="member-card">
         <div class="member-photo">
           <img
-            src="imatges/ADRI.jpeg"
+            src="https://drive.google.com/thumbnail?id=ADRIA_FILE_ID&sz=w400"
             alt="Adrià"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
@@ -538,7 +636,7 @@
       <div class="member-card">
         <div class="member-photo">
           <img
-            src="imatges/MIQUEL.jpeg"
+            src="https://drive.google.com/thumbnail?id=MIQUELANGEL_FILE_ID&sz=w400"
             alt="Miquel Àngel"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
@@ -554,7 +652,7 @@
       <div class="member-card">
         <div class="member-photo">
           <img
-            src="imatges/LAURA.jpeg"
+            src="https://drive.google.com/thumbnail?id=LAURA_FILE_ID&sz=w400"
             alt="Laura"
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
@@ -570,10 +668,121 @@
   </div>
 </div>
 
+<!-- GALERIA -->
+<div id="galeria">
+  <div class="inner">
+    <p class="section-label">// 03</p>
+    <h2>Galeria</h2>
+    <div class="divider"></div>
+
+    <!--
+      INSTRUCCIONS:
+      Puja les fotos/vídeos a la carpeta imatges/ del teu repositori GitHub.
+      Afegeix o elimina blocs <div class="carousel-slide"> segons els fitxers que tinguis.
+      Per vídeos usa <video>, per fotos usa <img>.
+      Exemples de noms: galeria1.jpg, galeria2.jpg, concert1.mp4 ...
+    -->
+    <div class="carousel-wrapper">
+      <div class="carousel-track" id="carouselTrack">
+
+        <!-- FOTO 1 -->
+        <div class="carousel-slide">
+          <img src="imatges/galeria1.jpg" alt="Galeria 1" onerror="this.parentElement.style.background='var(--card)'; this.style.display='none';" />
+        </div>
+
+        <!-- FOTO 2 -->
+        <div class="carousel-slide">
+          <img src="imatges/galeria2.jpg" alt="Galeria 2" onerror="this.parentElement.style.background='var(--card)'; this.style.display='none';" />
+        </div>
+
+        <!-- FOTO 3 -->
+        <div class="carousel-slide">
+          <img src="imatges/galeria3.jpg" alt="Galeria 3" onerror="this.parentElement.style.background='var(--card)'; this.style.display='none';" />
+        </div>
+
+        <!-- FOTO 4 -->
+        <div class="carousel-slide">
+          <img src="imatges/galeria4.jpg" alt="Galeria 4" onerror="this.parentElement.style.background='var(--card)'; this.style.display='none';" />
+        </div>
+
+        <!-- FOTO 5 -->
+        <div class="carousel-slide">
+          <img src="imatges/galeria5.jpg" alt="Galeria 5" onerror="this.parentElement.style.background='var(--card)'; this.style.display='none';" />
+        </div>
+
+        <!-- VÍDEO 1 (descomenta si tens vídeo) -->
+        <!--
+        <div class="carousel-slide">
+          <video src="imatges/concert1.mp4" controls muted playsinline></video>
+        </div>
+        -->
+
+      </div>
+    </div>
+
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="prevBtn">&#8592;</button>
+      <div class="carousel-dots" id="carouselDots"></div>
+      <button class="carousel-btn" id="nextBtn">&#8594;</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    const track = document.getElementById('carouselTrack');
+    const slides = track.querySelectorAll('.carousel-slide');
+    const dotsContainer = document.getElementById('carouselDots');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function getSlidesVisible() {
+      return window.innerWidth <= 700 ? 1 : 3;
+    }
+
+    let current = 0;
+    const total = slides.length;
+
+    function totalSteps() {
+      return Math.ceil(total / getSlidesVisible());
+    }
+
+    function buildDots() {
+      dotsContainer.innerHTML = '';
+      for (let i = 0; i < totalSteps(); i++) {
+        const d = document.createElement('div');
+        d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        d.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(d);
+      }
+    }
+
+    function updateDots() {
+      dotsContainer.querySelectorAll('.carousel-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    function goTo(index) {
+      current = (index + totalSteps()) % totalSteps();
+      const slideWidth = slides[0].offsetWidth + 16; // gap = 1rem = 16px
+      track.style.transform = `translateX(-${current * getSlidesVisible() * slideWidth}px)`;
+      updateDots();
+    }
+
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+
+    buildDots();
+    window.addEventListener('resize', () => { buildDots(); goTo(0); });
+  })();
+</script>
+
 <!-- CONTACTE -->
 <div id="contacte">
   <div class="inner">
-    <p class="section-label">// 03</p>
+    <p class="section-label">// 04</p>
     <h2>Contacte</h2>
     <div class="divider"></div>
     <p style="color:var(--muted); font-size:0.85rem; line-height:1.8;">
@@ -590,21 +799,11 @@
         </div>
       </a>
 
-      <a class="contact-item" href="mailto:bohringband@gmail.com">
+      <a class="contact-item" href="/cdn-cgi/l/email-protection#d5b7babda7bcbbb2b7b4bbb195b2b8b4bcb9fbb6bab8">
         <span class="contact-icon">✉️</span>
         <div>
           <span class="contact-label">Correu electrònic</span>
-          <span class="contact-value">bohringband@gmail.com</span>
+          <span class="contact-value"><span class="__cf_email__" data-cfemail="a8cac7c0dac1c6cfcac9c6cce8cfc5c9c1c486cbc7c5">[email&#160;protected]</span></span>
         </div>
       </a>
 
-    </div>
-  </div>
-</div>
-
-<footer>
-  © 2025 Bohring Band · Universitat de Barcelona · Física &amp; FisMat
-</footer>
-
-</body>
-</html>
