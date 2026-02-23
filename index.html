@@ -916,10 +916,85 @@ També ha aparegut als escenaris tant fent teatre, com cantant a la coral on ha 
     window.addEventListener('resize', () => { buildDots(); goTo(0); });
   })();
 </script>
+<!-- FORMULARI -->
+<div id="formulari" style="background: var(--surface); padding: 6rem 2rem;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <p class="section-label">// 04</p>
+    <h2>Escriu-nos</h2>
+    <div class="divider"></div>
+    <p style="color:var(--muted); font-size:0.85rem; line-height:1.8; margin-bottom: 2rem;">
+      Omple el formulari i et respondrem el més aviat possible.
+    </p>
+    <form action="https://formspree.io/f/xeelpayb" method="POST" id="contactForm">
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+
+        <div>
+          <label style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.4rem;">Nom</label>
+          <input type="text" name="nom" required
+            style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Space Mono',monospace; font-size:0.9rem; padding:0.9rem 1rem; outline:none; border-radius:2px; transition:border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" />
+        </div>
+
+        <div>
+          <label style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.4rem;">Correu electrònic</label>
+          <input type="email" name="email" required
+            style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Space Mono',monospace; font-size:0.9rem; padding:0.9rem 1rem; outline:none; border-radius:2px; transition:border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" />
+        </div>
+
+        <div>
+          <label style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.4rem;">Telèfon</label>
+          <input type="tel" name="telefon"
+            style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Space Mono',monospace; font-size:0.9rem; padding:0.9rem 1rem; outline:none; border-radius:2px; transition:border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'" />
+        </div>
+
+        <div>
+          <label style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:0.4rem;">Missatge</label>
+          <textarea name="missatge" required rows="5"
+            style="width:100%; background:var(--card); border:1px solid var(--border); color:var(--text); font-family:'Space Mono',monospace; font-size:0.9rem; padding:0.9rem 1rem; outline:none; border-radius:2px; resize:vertical; transition:border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
+
+        <button type="submit"
+          style="background:var(--accent); color:var(--bg); font-family:'Space Mono',monospace; font-weight:700; font-size:0.8rem; letter-spacing:0.2em; text-transform:uppercase; padding:1rem 2rem; border:none; cursor:pointer; border-radius:2px; transition:opacity 0.2s;"
+          onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          Enviar missatge →
+        </button>
+
+        <p id="formMsg" style="display:none; font-size:0.8rem; text-align:center; letter-spacing:0.1em;"></p>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const msg = document.getElementById('formMsg');
+    const res = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      msg.textContent = '✓ Missatge enviat! Gràcies, us respondrem aviat.';
+      msg.style.color = 'var(--accent)';
+      form.reset();
+    } else {
+      msg.textContent = '✗ Hi ha hagut un error. Prova-ho de nou o escriu-nos per correu.';
+      msg.style.color = 'var(--accent2)';
+    }
+    msg.style.display = 'block';
+  });
+</script>
+
 <!-- CONTACTE -->
 <div id="contacte">
   <div class="inner">
-    <p class="section-label">// 04</p>
+    <p class="section-label">// 05</p>
     <h2>Contacte</h2>
     <div class="divider"></div>
     <p style="color:var(--muted); font-size:0.85rem; line-height:1.8;">
@@ -936,11 +1011,11 @@ També ha aparegut als escenaris tant fent teatre, com cantant a la coral on ha 
         </div>
       </a>
 
-      <a class="contact-item" href="mailto:bohringband@gmail.com">
+      <a class="contact-item" href="/cdn-cgi/l/email-protection#2c4e43445e45424b4e4d42486c4b414d4540024f4341">
         <span class="contact-icon">✉️</span>
         <div>
           <span class="contact-label">Correu electrònic</span>
-          <span class="contact-value">bohringband@gmail.com</span>
+          <span class="contact-value"><span class="__cf_email__" data-cfemail="13717c7b617a7d7471727d7753747e727a7f3d707c7e">[email&#160;protected]</span></span>
         </div>
       </a>
 
@@ -948,11 +1023,5 @@ També ha aparegut als escenaris tant fent teatre, com cantant a la coral on ha 
   </div>
 </div>
 
-<script>
-  // Flip per clic en mòbil (hover ja funciona en escriptori)
-  document.querySelectorAll('.member-card-flip').forEach(card => {
-    card.addEventListener('click', () => card.classList.toggle('flipped'));
-  });
-</script>
-<footer>© 2025 Bohring Band</footer>
-</html>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Flip per clic en
