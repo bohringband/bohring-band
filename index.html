@@ -589,6 +589,7 @@
     <li><a href="#qui-som">Qui som</a></li>
     <li><a href="#integrants">Integrants</a></li>
     <li><a href="#galeria">Galeria</a></li>
+    <li><a href="#concerts">Concerts</a></li>
     <li><a href="#formulari">Escriu-nos</a></li>
     <li><a href="#contacte">Contacte</a></li>
   </ul>
@@ -931,10 +932,316 @@ També ha aparegut als escenaris tant fent teatre, com cantant a la coral on ha 
     window.addEventListener('resize', () => { buildDots(); goTo(0); });
   })();
 </script>
+<!-- CONCERTS -->
+<div id="concerts" style="background: var(--bg); padding: 6rem 2rem;">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <p class="section-label">// 04</p>
+    <h2>Concerts</h2>
+    <div class="divider"></div>
+    <p style="color:var(--muted); font-size:0.85rem; line-height:1.8; margin-bottom: 2.5rem;">
+      Properes actuacions i dates de la Bohring Band. Afegeix-les al teu calendari!
+    </p>
+
+    <div id="concertsContainer">
+      <div id="concertsLoading" style="text-align:center; color:var(--muted); font-size:0.85rem; padding:3rem 0; letter-spacing:0.1em;">
+        <div style="font-size:2rem; margin-bottom:1rem; opacity:0.4;">🎵</div>
+        Carregant concerts...
+      </div>
+      <div id="concertsList" style="display:none;"></div>
+      <div id="concertsEmpty" style="display:none; text-align:center; color:var(--muted); padding:3rem 0;">
+        <div style="font-size:2rem; margin-bottom:1rem; opacity:0.4;">📅</div>
+        <p style="font-size:0.85rem; letter-spacing:0.1em;">Aviat hi haurà noves dates!</p>
+      </div>
+      <div id="concertsError" style="display:none; text-align:center; color:var(--accent2); padding:3rem 0; font-size:0.8rem; letter-spacing:0.1em;"></div>
+    </div>
+
+    <div style="text-align:center; margin-top:3rem;">
+      <a
+        href="https://calendar.google.com/calendar/r?cid=d62cf25d8023f5fb9f1a983cd471537fb5125e2a80103218ea548de75a9c0619%40group.calendar.google.com"
+        target="_blank" rel="noopener"
+        style="display:inline-flex; align-items:center; gap:0.6rem; background:transparent; border:1px solid var(--accent); color:var(--accent); font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; padding:0.85rem 1.8rem; text-decoration:none; transition:background 0.2s, color 0.2s;"
+        onmouseover="this.style.background='var(--accent)'; this.style.color='var(--bg)'"
+        onmouseout="this.style.background='transparent'; this.style.color='var(--accent)'">
+        📅 Subscriu-te al calendari
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  .concert-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.5rem;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .concert-card:hover {
+    border-color: var(--accent);
+    background: rgba(232,255,0,0.04);
+    transform: translateX(4px);
+  }
+  .concert-date-box {
+    text-align: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 0.75rem 1rem;
+    min-width: 70px;
+  }
+  .concert-date-day {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .concert-date-month {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+  .concert-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    color: var(--text);
+  }
+  .concert-location {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-top: 0.3rem;
+  }
+  .concert-location::before { content: '📍 '; }
+  .concert-time {
+    font-size: 0.75rem;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-align: right;
+  }
+  .concert-tag-past {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.5rem;
+    margin-top: 0.4rem;
+    display: inline-block;
+  }
+  .concert-card--past {
+    opacity: 0.5;
+    border-left-color: var(--border);
+  }
+  .concert-card--empty {
+    border-left-color: var(--border);
+    justify-content: center;
+    padding: 2rem;
+  }
+  .concerts-sublabel {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  /* Llista concerts passats */
+  .past-concerts-list {
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .past-concert-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+    transition: background 0.15s;
+  }
+  .past-concert-row:last-child { border-bottom: none; }
+  .past-concert-row:hover { background: rgba(255,255,255,0.03); }
+  .past-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .past-title {
+    color: var(--text);
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+  }
+  .past-location {
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .past-time {
+    color: var(--muted);
+    font-size: 0.72rem;
+    text-align: right;
+    white-space: nowrap;
+  }
+  @media (max-width: 600px) {
+    .concert-card {
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+    }
+    .concert-time { grid-column: 2; text-align: left; }
+    .past-concert-row {
+      grid-template-columns: 70px 1fr;
+      gap: 0.5rem 1rem;
+    }
+    .past-location { grid-column: 2; }
+    .past-time { grid-column: 2; text-align: left; }
+  }
+</style>
+
+<script>
+(async function() {
+  const CALENDAR_ID = 'd62cf25d8023f5fb9f1a983cd471537fb5125e2a80103218ea548de75a9c0619@group.calendar.google.com';
+  const API_KEY = 'AIzaSyCi4KE4iQcMzDam9Z22aEE9pnM_XCIZAG4';
+
+  const loading = document.getElementById('concertsLoading');
+  const list = document.getElementById('concertsList');
+  const empty = document.getElementById('concertsEmpty');
+  const error = document.getElementById('concertsError');
+
+  const MONTHS_CA = ['Gen','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Oct','Nov','Des'];
+  const DAYS_CA = ['Diumenge','Dilluns','Dimarts','Dimecres','Dijous','Divendres','Dissabte'];
+
+  function formatTime(dateStr, isAllDay) {
+    if (isAllDay) return 'Tot el dia';
+    const d = new Date(dateStr);
+    return d.toLocaleTimeString('ca-ES', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function isPast(event) {
+    const end = event.end.dateTime || event.end.date;
+    return new Date(end) < new Date();
+  }
+
+  try {
+    const now = new Date();
+    // timeMin: 1 any enrere per mostrar tots els passats de l'últim any
+    const timeMin = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()).toISOString();
+    // timeMax: 1 any endavant per futurs
+    const timeMax = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate()).toISOString();
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&maxResults=50`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Error ${res.status}`);
+    const data = await res.json();
+
+    loading.style.display = 'none';
+    const events = data.items || [];
+
+    if (events.length === 0) { empty.style.display = 'block'; return; }
+
+    list.style.display = 'block';
+
+    const upcoming = events.filter(e => !isPast(e));
+    // Passats dins l'últim any, ordenats del més recent al més antic
+    const past = events.filter(e => isPast(e)).reverse();
+
+    function renderCard(ev, pastStyle) {
+      const startRaw = ev.start.dateTime || ev.start.date;
+      const isAllDay = !ev.start.dateTime;
+      const d = new Date(startRaw);
+      const day = d.getDate();
+      const month = MONTHS_CA[d.getMonth()];
+      const weekday = DAYS_CA[d.getDay()];
+      const year = d.getFullYear();
+      const thisYear = new Date().getFullYear();
+      const timeStr = formatTime(startRaw, isAllDay);
+      const location = ev.location ? `<div class="concert-location">${ev.location}</div>` : '';
+      const yearStr = year !== thisYear ? ` ${year}` : '';
+
+      return `
+        <div class="concert-card${pastStyle ? ' concert-card--past' : ''}">
+          <div class="concert-date-box">
+            <div class="concert-date-day">${day}</div>
+            <div class="concert-date-month">${month}${yearStr}</div>
+          </div>
+          <div>
+            <div class="concert-title">${ev.summary || 'Concert'}</div>
+            ${location}
+            <div style="font-size:0.65rem; color:var(--muted); margin-top:0.2rem; letter-spacing:0.1em;">${weekday}</div>
+          </div>
+          <div class="concert-time">${timeStr}</div>
+        </div>`;
+    }
+
+    function renderPastRow(ev) {
+      const startRaw = ev.start.dateTime || ev.start.date;
+      const isAllDay = !ev.start.dateTime;
+      const d = new Date(startRaw);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = MONTHS_CA[d.getMonth()];
+      const year = d.getFullYear();
+      const thisYear = new Date().getFullYear();
+      const yearStr = year !== thisYear ? ` ${year}` : '';
+      const timeStr = formatTime(startRaw, isAllDay);
+      const location = ev.location || '—';
+
+      return `
+        <li class="past-concert-row">
+          <span class="past-date">${day} ${month}${yearStr}</span>
+          <span class="past-title">${ev.summary || 'Concert'}</span>
+          <span class="past-location">${location}</span>
+          <span class="past-time">${timeStr}</span>
+        </li>`;
+    }
+
+    let html = '';
+
+    if (upcoming.length > 0) {
+      html += `<div class="concerts-sublabel">Properes dates</div>`;
+      html += upcoming.map(e => renderCard(e, false)).join('');
+    } else {
+      html += `<div class="concert-card concert-card--empty">
+        <div style="text-align:center; width:100%; color:var(--muted); font-size:0.8rem; letter-spacing:0.15em;">Aviat hi haurà noves dates!</div>
+      </div>`;
+    }
+
+    if (past.length > 0) {
+      html += `<div class="concerts-sublabel" style="color:var(--muted); margin-top:3rem;">Actuacions passades <span style="font-size:0.6rem; opacity:0.6;">(últim any)</span></div>`;
+      html += `<ul class="past-concerts-list">`;
+      html += past.map(e => renderPastRow(e)).join('');
+      html += `</ul>`;
+    }
+
+    list.innerHTML = html;
+
+  } catch(err) {
+    loading.style.display = 'none';
+    error.style.display = 'block';
+    error.textContent = "⚠ No s'han pogut carregar els concerts. Comprova la connexió o torna-ho a intentar.";
+    console.error('Google Calendar error:', err);
+  }
+})();
+</script>
+
+
 <!-- FORMULARI -->
 <div id="formulari" style="background: var(--surface); padding: 6rem 2rem;">
   <div style="max-width: 600px; margin: 0 auto;">
-    <p class="section-label">// 04</p>
+    <p class="section-label">// 05</p>
     <h2>Escriu-nos</h2>
     <div class="divider"></div>
     <p style="color:var(--muted); font-size:0.85rem; line-height:1.8; margin-bottom: 2rem;">
@@ -1009,7 +1316,7 @@ També ha aparegut als escenaris tant fent teatre, com cantant a la coral on ha 
 <!-- CONTACTE -->
 <div id="contacte">
   <div class="inner">
-    <p class="section-label">// 05</p>
+    <p class="section-label">// 06</p>
     <h2>Contacte</h2>
     <div class="divider"></div>
     <p style="color:var(--muted); font-size:0.85rem; line-height:1.8;">
@@ -1038,5 +1345,4 @@ També ha aparegut als escenaris tant fent teatre, com cantant a la coral on ha 
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // Flip per clic en
+<scr
