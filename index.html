@@ -884,6 +884,226 @@
 </div>
 
 <style>
+  /* ── LIGHTBOX GALERIA ── */
+  .carousel-slide-2 {
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .carousel-slide-2::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.2s;
+    pointer-events: none;
+  }
+  
+  .carousel-slide-2:hover::after {
+    background: rgba(0,0,0,0.25);
+  }
+  
+  .slide-play-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(232,255,0,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .carousel-slide-2:hover .slide-play-badge {
+    opacity: 1;
+  }
+  
+  .slide-play-badge svg {
+    width: 18px;
+    height: 18px;
+    fill: #0a0a0f;
+    margin-left: 3px;
+  }
+  
+  /* Lightbox */
+  #galleryLightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0,0,0,0.96);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    backdrop-filter: blur(8px);
+  }
+  
+  #galleryLightbox.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+  
+  .lb-topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    z-index: 10;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+  }
+  
+  .lb-counter {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  
+  .lb-close {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text);
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  
+  .lb-close:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+  
+  .lb-media-area {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4.5rem 5rem;
+    box-sizing: border-box;
+  }
+  
+  #lbMedia {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: block;
+    border-radius: 2px;
+    transition: opacity 0.2s ease;
+  }
+  
+  #lbMedia.fade {
+    opacity: 0;
+  }
+  
+  .lb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(10,10,15,0.7);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    z-index: 10;
+  }
+  
+  .lb-nav:hover {
+    background: rgba(232,255,0,0.12);
+    border-color: var(--accent);
+  }
+  
+  .lb-nav.prev { left: 1rem; }
+  .lb-nav.next { right: 1rem; }
+  
+  .lb-thumbnails {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  
+  .lb-thumbnails::-webkit-scrollbar { display: none; }
+  
+  .lb-thumb {
+    width: 52px;
+    height: 36px;
+    flex-shrink: 0;
+    border: 2px solid transparent;
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s, border-color 0.2s;
+    background: var(--card);
+    position: relative;
+  }
+  
+  .lb-thumb.active {
+    border-color: var(--accent);
+    opacity: 1;
+  }
+  
+  .lb-thumb img,
+  .lb-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+  
+  .lb-thumb-icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    background: rgba(0,0,0,0.3);
+  }
+  
+  @media (max-width: 700px) {
+    .lb-media-area { padding: 4rem 3.5rem 5.5rem; }
+    .lb-nav { width: 2.4rem; height: 2.4rem; font-size: 0.9rem; }
+    .lb-nav.prev { left: 0.4rem; }
+    .lb-nav.next { right: 0.4rem; }
+  }
   .carousel-outer {
     width: 100%;
     overflow: hidden;
@@ -1387,4 +1607,178 @@
   </div>
 </div>
 
-<scr
+<script>
+<!-- GALERIA LIGHTBOX -->
+<div id="galleryLightbox">
+  <div class="lb-topbar">
+    <span class="lb-counter" id="lbCounter">1 / 1</span>
+    <button class="lb-close" id="lbClose">✕</button>
+  </div>
+
+  <div class="lb-media-area" id="lbMediaArea">
+    <!-- contingut dinàmic -->
+  </div>
+
+  <button class="lb-nav prev" id="lbPrev">&#8592;</button>
+  <button class="lb-nav next" id="lbNext">&#8594;</button>
+
+  <div class="lb-thumbnails" id="lbThumbs"></div>
+</div>
+<script>
+  (function () {
+    const lightbox   = document.getElementById('galleryLightbox');
+    const mediaArea  = document.getElementById('lbMediaArea');
+    const counter    = document.getElementById('lbCounter');
+    const thumbsBar  = document.getElementById('lbThumbs');
+    const closeBtn   = document.getElementById('lbClose');
+    const prevBtn    = document.getElementById('lbPrev');
+    const nextBtn    = document.getElementById('lbNext');
+  
+    let items   = [];  // { type: 'img'|'video', src: '...' }
+    let current = 0;
+    let mediaEl = null;
+  
+    /* ── Recollir tots els slides ── */
+    function buildIndex() {
+      items = [];
+      document.querySelectorAll('.carousel-slide-2').forEach(slide => {
+        const img   = slide.querySelector('img');
+        const video = slide.querySelector('video');
+        if (img && img.src)   items.push({ type: 'img',   src: img.src });
+        else if (video && video.src) items.push({ type: 'video', src: video.src });
+      });
+    }
+  
+    /* ── Construir miniatures ── */
+    function buildThumbs() {
+      thumbsBar.innerHTML = '';
+      items.forEach((item, i) => {
+        const t = document.createElement('div');
+        t.className = 'lb-thumb' + (i === current ? ' active' : '');
+  
+        if (item.type === 'img') {
+          const img = document.createElement('img');
+          img.src = item.src;
+          img.loading = 'lazy';
+          t.appendChild(img);
+        } else {
+          const vid = document.createElement('video');
+          vid.src = item.src;
+          vid.preload = 'metadata';
+          vid.muted = true;
+          t.appendChild(vid);
+          const icon = document.createElement('div');
+          icon.className = 'lb-thumb-icon';
+          icon.textContent = '▶';
+          t.appendChild(icon);
+        }
+  
+        t.addEventListener('click', (e) => { e.stopPropagation(); goTo(i); });
+        thumbsBar.appendChild(t);
+      });
+    }
+  
+    /* ── Mostrar media ── */
+    function showItem(index, animate = true) {
+      current = ((index % items.length) + items.length) % items.length;
+      const item = items[current];
+  
+      /* Para el vídeo anterior si n'hi ha */
+      if (mediaEl && mediaEl.tagName === 'VIDEO') {
+        mediaEl.pause();
+      }
+  
+      function render() {
+        mediaArea.innerHTML = '';
+  
+        if (item.type === 'img') {
+          mediaEl = document.createElement('img');
+          mediaEl.id = 'lbMedia';
+          mediaEl.src = item.src;
+          mediaEl.alt = '';
+        } else {
+          mediaEl = document.createElement('video');
+          mediaEl.id = 'lbMedia';
+          mediaEl.src = item.src;
+          mediaEl.controls = true;
+          mediaEl.autoplay = true;
+          mediaEl.playsinline = true;
+        }
+  
+        mediaArea.appendChild(mediaEl);
+        counter.textContent = `${current + 1} / ${items.length}`;
+  
+        /* Actualitza miniatures */
+        thumbsBar.querySelectorAll('.lb-thumb').forEach((t, i) =>
+          t.classList.toggle('active', i === current)
+        );
+  
+        /* Scroll miniatura activa a la vista */
+        const activeTh = thumbsBar.querySelectorAll('.lb-thumb')[current];
+        if (activeTh) activeTh.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
+      }
+  
+      if (animate && mediaEl) {
+        mediaEl.style.opacity = '0';
+        setTimeout(render, 150);
+      } else {
+        render();
+      }
+    }
+  
+    function goTo(i) { showItem(i, true); }
+  
+    /* ── Obrir ── */
+    function open(index) {
+      buildIndex();
+      buildThumbs();
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      showItem(index, false);
+    }
+  
+    /* ── Tancar ── */
+    function close() {
+      if (mediaEl && mediaEl.tagName === 'VIDEO') mediaEl.pause();
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+      mediaArea.innerHTML = '';
+      mediaEl = null;
+    }
+  
+    /* ── Afegir icona de play als slides de vídeo ── */
+    document.querySelectorAll('.carousel-slide-2').forEach(slide => {
+      if (slide.querySelector('video')) {
+        const badge = document.createElement('div');
+        badge.className = 'slide-play-badge';
+        badge.innerHTML = `<svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>`;
+        slide.appendChild(badge);
+      }
+    });
+  
+    /* ── Listeners dels slides ── */
+    document.querySelectorAll('.carousel-slide-2').forEach((slide, i) => {
+      slide.addEventListener('click', () => open(i));
+    });
+  
+    closeBtn.addEventListener('click', close);
+    prevBtn.addEventListener('click', () => goTo(current - 1));
+    nextBtn.addEventListener('click', () => goTo(current + 1));
+  
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target === mediaArea) close();
+    });
+  
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape')      close();
+      if (e.key === 'ArrowLeft')   goTo(current - 1);
+      if (e.key === 'ArrowRight')  goTo(current + 1);
+    });
+  
+    /* Reconstruir si es redimensiona (per si canvia el nombre de slides visibles) */
+    window.addEventListener('resize', buildIndex);
+  })();
+</script>
+</body>
+</html>
