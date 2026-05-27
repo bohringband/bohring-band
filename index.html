@@ -1313,12 +1313,6 @@
         </div>
       </div>
     </div>
-    <div class="carousel-controls">
-      <button class="carousel-btn" id="prevBtn">&#8592;</button>
-      <div class="carousel-dots" id="carouselDots"></div>
-      <button class="carousel-btn" id="nextBtn">&#8594;</button>
-    </div>
-
   </div>
 </div>
 
@@ -1543,36 +1537,86 @@
     .lb-nav.prev { left: 0.4rem; }
     .lb-nav.next { right: 0.4rem; }
   }
-  .carousel-outer {
-    width: 100%;
-    overflow: hidden;
-  }
+/* ── GALERIA COLLAGE / MOBILE STYLE ── */
 
+.carousel-outer {
+  width: 100%;
+}
+
+.carousel-track-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+/* Elements */
+.carousel-slide-2 {
+  position: relative;
+  overflow: hidden;
+  background: #1a1a28;
+  border: 1px solid #2a2a3a;
+  border-radius: 6px;
+  cursor: pointer;
+  
+  /* efecte collage */
+  break-inside: avoid;
+}
+
+/* diferents alçades perquè sembli més orgànic */
+.carousel-slide-2:nth-child(3n) {
+  aspect-ratio: 4/5;
+}
+
+.carousel-slide-2:nth-child(4n) {
+  aspect-ratio: 1/1;
+}
+
+.carousel-slide-2:nth-child(5n) {
+  aspect-ratio: 16/10;
+}
+
+.carousel-slide-2 img,
+.carousel-slide-2 video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+/* hover modern */
+.carousel-slide-2:hover img,
+.carousel-slide-2:hover video {
+  transform: scale(1.04);
+}
+
+.carousel-slide-2::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  transition: background 0.25s;
+  pointer-events: none;
+}
+
+.carousel-slide-2:hover::after {
+  background: rgba(0,0,0,0.18);
+}
+
+/* mòbil */
+@media (max-width: 700px) {
   .carousel-track-2 {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 12px;
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
   }
+}
 
-  .carousel-slide-2 {
-    flex: 0 0 calc((100% - 24px) / 3);
-    width: calc((100% - 24px) / 3);
-    aspect-ratio: 4/3;
-    overflow: hidden;
-    background: #1a1a28;
-    border: 1px solid #2a2a3a;
-    border-radius: 2px;
+/* pantalles molt petites */
+@media (max-width: 480px) {
+  .carousel-track-2 {
+    grid-template-columns: 1fr 1fr;
   }
-
-  .carousel-slide-2 img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+}
 
   @media (max-width: 700px) {
     .carousel-slide-2 {
@@ -1582,57 +1626,7 @@
   }
 </style>
 
-<script>
-  (function() {
-    const track = document.getElementById('carouselTrack');
-    const dotsContainer = document.getElementById('carouselDots');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
 
-    const VISIBLE = () => window.innerWidth <= 700 ? 1 : 3;
-    const GAP = 12;
-    let current = 0;
-
-    function getSlides() {
-      return track.querySelectorAll('.carousel-slide-2');
-    }
-
-    function totalSteps() {
-      return Math.ceil(getSlides().length / VISIBLE());
-    }
-
-    function buildDots() {
-      dotsContainer.innerHTML = '';
-      for (let i = 0; i < totalSteps(); i++) {
-        const d = document.createElement('div');
-        d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        d.addEventListener('click', () => goTo(i));
-        dotsContainer.appendChild(d);
-      }
-    }
-
-    function updateDots() {
-      dotsContainer.querySelectorAll('.carousel-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === current);
-      });
-    }
-
-    function goTo(index) {
-      const steps = totalSteps();
-      current = ((index % steps) + steps) % steps;
-      const slides = getSlides();
-      const slideWidth = slides[0].offsetWidth + GAP;
-      track.style.transform = `translateX(-${current * VISIBLE() * slideWidth}px)`;
-      updateDots();
-    }
-
-    prevBtn.addEventListener('click', () => goTo(current - 1));
-    nextBtn.addEventListener('click', () => goTo(current + 1));
-
-    buildDots();
-    window.addEventListener('resize', () => { buildDots(); goTo(0); });
-  })();
-</script>
 <!-- GALERIA LIGHTBOX -->
 <div id="galleryLightbox">
   <div class="lb-topbar">
